@@ -2,10 +2,10 @@
 
 namespace SSpkS\Handler;
 
-use \SSpkS\Output\JsonOutput;
-use \SSpkS\Output\UrlFixer;
-use \SSpkS\Package\PackageFinder;
-use \SSpkS\Package\PackageFilter;
+use SSpkS\Output\JsonOutput;
+use SSpkS\Output\UrlFixer;
+use SSpkS\Package\PackageFilter;
+use SSpkS\Package\PackageFinder;
 
 /*
 example data passed by a syno
@@ -33,17 +33,17 @@ class SynologyHandler extends AbstractHandler
 {
     public function canHandle()
     {
-        return (isset($_REQUEST['unique']) && substr($_REQUEST['unique'], 0, 8) == 'synology');
+        return isset($_REQUEST['unique']) && substr($_REQUEST['unique'], 0, 8) == 'synology';
     }
 
     public function handle()
     {
         // Synology request --> show JSON
-        $arch     = trim($_REQUEST['arch']);
-        $major    = trim($_REQUEST['major']);
-        $minor    = trim($_REQUEST['minor']);
-        $build    = trim($_REQUEST['build']);
-        $channel  = trim($_REQUEST['package_update_channel']);
+        $arch = trim($_REQUEST['arch']);
+        $major = trim($_REQUEST['major']);
+        $minor = trim($_REQUEST['minor']);
+        $build = trim($_REQUEST['build']);
+        $channel = trim($_REQUEST['package_update_channel']);
         if (isset($_REQUEST['language'])) {
             $language = trim($_REQUEST['language']);
         } else {
@@ -54,7 +54,7 @@ class SynologyHandler extends AbstractHandler
 
         // Make sure, that the "client" knows that output is sent in JSON format
         header('Content-type: application/json');
-        $fw_version = $major . '.' . $minor . '.' . $build;
+        $fw_version = $major.'.'.$minor.'.'.$build;
         $pkgs = new PackageFinder($this->config);
         $pkgf = new PackageFilter($this->config, $pkgs->getAllPackages());
         $pkgf->setArchitectureFilter($arch);

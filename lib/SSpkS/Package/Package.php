@@ -3,34 +3,36 @@
 namespace SSpkS\Package;
 
 /**
- * SPK Package class
+ * SPK Package class.
  *
- * @property string $spk Path to SPK file
- * @property string $spk_url URL to SPK file
- * @property string $displayname Pretty printed name of package (falls back to $package if not present)
- * @property string $package Package name
- * @property string $version Package version
- * @property string $description Package description
- * @property string $maintainer Package maintainer
- * @property string $maintainer_url URL of maintainer's web page
- * @property string $distributor Package distributor
- * @property string $distributor_url URL of distributor's web page
- * @property string $support_url URL of support web page
- * @property array $arch List of supported architectures, or 'noarch'
- * @property array $thumbnail List of thumbnail files
- * @property array $thumbnail_url List of thumbnail URLs
- * @property array $snapshot List of screenshot files
- * @property array $snapshot_url List of screenshot URLs
- * @property bool $beta TRUE if this is a beta package.
- * @property string $firmware Minimum firmware needed on device.
+ * @property string $spk                  Path to SPK file
+ * @property string $spk_url              URL to SPK file
+ * @property string $displayname          Pretty printed name of package (falls back to $package if not present)
+ * @property string $package              Package name
+ * @property string $version              Package version
+ * @property string $description          Package description
+ * @property string $maintainer           Package maintainer
+ * @property string $maintainer_url       URL of maintainer's web page
+ * @property string $distributor          Package distributor
+ * @property string $distributor_url      URL of distributor's web page
+ * @property string $support_url          URL of support web page
+ * @property array  $arch                 List of supported architectures, or 'noarch'
+ * @property array  $thumbnail            List of thumbnail files
+ * @property array  $thumbnail_url        List of thumbnail URLs
+ * @property array  $snapshot             List of screenshot files
+ * @property array  $snapshot_url         List of screenshot URLs
+ * @property bool   $beta                 TRUE if this is a beta package.
+ * @property string $firmware             Minimum firmware needed on device.
+ * @property string $os_min_ver           Minimum DSM OS Version needed on device.
+ * @property string $os_max_ver           Maximal DSM OS needed on device.
  * @property string $install_dep_services Dependencies required by this package.
- * @property bool $silent_install Allow silent install
- * @property bool $silent_uninstall Allow silent uninstall
- * @property bool $silent_upgrade Allow silent upgrade
- * @property bool $auto_upgrade_from Allow auto upgrade if version is newer than this field
- * @property bool $qinst Allow silent install
- * @property bool $qupgrade Allow silent upgrade
- * @property bool $qstart Allow automatic start after install
+ * @property bool   $silent_install       Allow silent install
+ * @property bool   $silent_uninstall     Allow silent uninstall
+ * @property bool   $silent_upgrade       Allow silent upgrade
+ * @property bool   $auto_upgrade_from    Allow auto upgrade if version is newer than this field
+ * @property bool   $qinst                Allow silent install
+ * @property bool   $qupgrade             Allow silent upgrade
+ * @property bool   $qstart               Allow automatic start after install
  */
 class Package
 {
@@ -45,34 +47,35 @@ class Package
     private $metadata;
 
     /**
-     * @param \SSpkS\Config $config Config object
-     * @param string $filename Filename of SPK file
+     * @param \SSpkS\Config $config   Config object
+     * @param string        $filename Filename of SPK file
      */
     public function __construct(\SSpkS\Config $config, $filename)
     {
         $this->config = $config;
         if (!preg_match('/\.spk$/', $filename)) {
-            throw new \Exception('File ' . $filename . ' doesn\'t have .spk extension!');
+            throw new \Exception('File '.$filename.' doesn\'t have .spk extension!');
         }
         if (!file_exists($filename)) {
-            throw new \Exception('File ' . $filename . ' not found!');
+            throw new \Exception('File '.$filename.' not found!');
         }
-        $this->filepath      = $filename;
-        $this->filename      = basename($filename);
+        $this->filepath = $filename;
+        $this->filename = basename($filename);
         $this->filenameNoExt = basename($filename, '.spk');
-        $this->filepathNoExt = $this->config->paths['cache'] . $this->filenameNoExt;
-        $this->metafile      = $this->filepathNoExt . '.nfo';
-        $this->wizfile       = $this->filepathNoExt . '.wiz';
-        $this->nowizfile     = $this->filepathNoExt . '.nowiz';
+        $this->filepathNoExt = $this->config->paths['cache'].$this->filenameNoExt;
+        $this->metafile = $this->filepathNoExt.'.nfo';
+        $this->wizfile = $this->filepathNoExt.'.wiz';
+        $this->nowizfile = $this->filepathNoExt.'.nowiz';
         // Make sure we have metadata available
-        $this->collectMetadata();        
+        $this->collectMetadata();
     }
 
     /**
      * Getter magic method.
      *
-     * @param string $name Name of requested value.
-     * @return mixed Requested value.
+     * @param string $name name of requested value
+     *
+     * @return mixed requested value
      */
     public function __get($name)
     {
@@ -82,8 +85,8 @@ class Package
     /**
      * Setter magic method.
      *
-     * @param string $name Name of variable to set.
-     * @param mixed $value Value to set.
+     * @param string $name  name of variable to set
+     * @param mixed  $value value to set
      */
     public function __set($name, $value)
     {
@@ -93,8 +96,9 @@ class Package
     /**
      * Isset feature magic method.
      *
-     * @param string $name Name of requested value.
-     * @return bool TRUE if value exists, FALSE otherwise.
+     * @param string $name name of requested value
+     *
+     * @return bool TRUE if value exists, FALSE otherwise
      */
     public function __isset($name)
     {
@@ -104,7 +108,7 @@ class Package
     /**
      * Unset feature magic method.
      *
-     * @param string $name Name of value to unset.
+     * @param string $name name of value to unset
      */
     public function __unset($name)
     {
@@ -116,11 +120,12 @@ class Package
      * boolean type.
      *
      * @param mixed $value Input value
-     * @return bool Boolean interpretation of $value.
+     *
+     * @return bool boolean interpretation of $value
      */
     public function parseBool($value)
     {
-        return in_array($value, array('true', 'yes', '1', 1));
+        return in_array($value, ['true', 'yes', '1', 1]);
     }
 
     /**
@@ -147,6 +152,7 @@ class Package
         }
         $this->extractIfMissing('INFO', $this->metafile);
         $this->metadata = parse_ini_file($this->metafile);
+
         if (!isset($this->metadata['displayname'])) {
             $this->metadata['displayname'] = $this->metadata['package'];
         }
@@ -165,32 +171,35 @@ class Package
             $this->metadata['beta'] = false;
         }
 
-        $qValue = $this->hasWizardDir()? false : true;
+        $qValue = $this->hasWizardDir() ? false : true;
         $this->metadata['thumbnail'] = $this->getThumbnails();
-        $this->metadata['snapshot']  = $this->getSnapshots();
-        $this->metadata['qinst']     = !empty($this->metadata['qinst'])? parseBool($this->metadata['qinst']):$qValue;
-        $this->metadata['qupgrade']  = !empty($this->metadata['qupgrade'])? parseBool($this->metadata['qupgrade']):$qValue;
-        $this->metadata['qstart']    = !empty($this->metadata['qstart'])? parseBool($this->metadata['qstart']):$qValue;
+        $this->metadata['snapshot'] = $this->getSnapshots();
+        $this->metadata['qinst'] = !empty($this->metadata['qinst']) ? parseBool($this->metadata['qinst']) : $qValue;
+        $this->metadata['qupgrade'] = !empty($this->metadata['qupgrade']) ? parseBool($this->metadata['qupgrade']) : $qValue;
+        $this->metadata['qstart'] = !empty($this->metadata['qstart']) ? parseBool($this->metadata['qstart']) : $qValue;
+        //$this->metadata['os_max_ver'] = '8.0.0';
     }
 
     /**
      * Returns metadata for this package.
      *
-     * @return array Metadata.
+     * @return array metadata
      */
     public function getMetadata()
     {
         return $this->metadata;
     }
-      
+
     /**
      * Extracts $inPkgName from package to $targetFile, if it doesn't
      * already exist. Needs the phar.so extension and allow_url_fopen.
      *
-     * @param string $inPkgName Filename in package
+     * @param string $inPkgName  Filename in package
      * @param string $targetFile Path to destination
-     * @throws \Exception if the file couldn't get extracted.
-     * @return bool TRUE if successful or no action needed.
+     *
+     * @throws \Exception if the file couldn't get extracted
+     *
+     * @return bool TRUE if successful or no action needed
      */
     public function extractIfMissing($inPkgName, $targetFile)
     {
@@ -202,25 +211,26 @@ class Package
         $tmp_dir = sys_get_temp_dir();
         $free_tmp = @disk_free_space($tmp_dir);
         if (!empty($free_tmp) && $free_tmp < 2048) {
-            throw new \Exception('TMP folder only has ' . $free_tmp . ' Bytes available. Disk full!');
+            throw new \Exception('TMP folder only has '.$free_tmp.' Bytes available. Disk full!');
         }
         $free = @disk_free_space(dirname($targetFile));
         if (!empty($free) && $free < 2048) {
-            throw new \Exception('Package folder only has ' . $free . ' Bytes available. Disk full!');
+            throw new \Exception('Package folder only has '.$free.' Bytes available. Disk full!');
         }
         try {
             $p = new \PharData($this->filepath, \Phar::CURRENT_AS_FILEINFO | \Phar::KEY_AS_FILENAME);
         } catch (\UnexpectedValueException $e) {
-            rename($this->filepath, $this->filepath . '.invalid');
-            throw new \Exception('Package ' . $this->filepath . ' not readable! Will be ignored in the future. Please try again!');
+            rename($this->filepath, $this->filepath.'.invalid');
+            throw new \Exception('Package '.$this->filepath.' not readable! Will be ignored in the future. Please try again!');
         }
-        $tmpExtractedFilepath = $tmp_dir . DIRECTORY_SEPARATOR . $inPkgName;
+        $tmpExtractedFilepath = $tmp_dir.DIRECTORY_SEPARATOR.$inPkgName;
         if (file_exists($tmpExtractedFilepath)) {
             // stale file from before - unlink first
             unlink($tmpExtractedFilepath);
         }
         $p->extractTo($tmp_dir, $inPkgName);
         rename($tmpExtractedFilepath, $targetFile);
+
         return true;
     }
 
@@ -242,16 +252,18 @@ class Package
         try {
             $p = new \PharData($this->filepath, \Phar::CURRENT_AS_FILEINFO | \Phar::KEY_AS_FILENAME);
         } catch (\UnexpectedValueException $e) {
-            rename($this->filepath, $this->filepath . '.invalid');
-            throw new \Exception('Package ' . $this->filepath . ' not readable! Will be ignored in the future. Please try again!');
+            rename($this->filepath, $this->filepath.'.invalid');
+            throw new \Exception('Package '.$this->filepath.' not readable! Will be ignored in the future. Please try again!');
         }
         foreach ($p as $file) {
             if (substr($file, strrpos($file, '/') + 1) == 'WIZARD_UIFILES') {
                 touch($this->wizfile);
+
                 return true;
             }
         }
         touch($this->nowizfile);
+
         return false;
     }
 
@@ -259,23 +271,24 @@ class Package
      * Returns a list of thumbnails for the specified package.
      *
      * @param string $pathPrefix Prefix to put before file path
+     *
      * @return array List of thumbnail urls
      */
     public function getThumbnails($pathPrefix = '')
     {
-        $thumbnailSources = array(
-            '72' => array(
+        $thumbnailSources = [
+            '72' => [
                 'file' => 'PACKAGE_ICON.PNG',
                 'info' => 'package_icon',
-            ),
-            '120' => array(
+            ],
+            '120' => [
                 'file' => 'PACKAGE_ICON_256.PNG',
                 'info' => 'package_icon_256',
-            ),
-        );
-        $thumbnails = array();
+            ],
+        ];
+        $thumbnails = [];
         foreach ($thumbnailSources as $size => $sourceList) {
-            $thumbName = $this->filepathNoExt . '_thumb_' . $size . '.png';
+            $thumbName = $this->filepathNoExt.'_thumb_'.$size.'.png';
             // Try to find file in package, otherwise check if defined in INFO
             try {
                 $this->extractIfMissing($sourceList['file'], $thumbName);
@@ -288,13 +301,14 @@ class Package
 
             // Use $size px thumbnail, if available
             if (file_exists($thumbName)) {
-                $thumbnails[] = $pathPrefix . $thumbName;
+                $thumbnails[] = $pathPrefix.$thumbName;
             } else {
                 // Use theme's default pictures
-                $themeUrl = $this->config->paths['themes'] . $this->config->site['theme'] . '/';
-                $thumbnails[] = $pathPrefix . $themeUrl . 'images/default_package_icon_' . $size . '.png';
+                $themeUrl = $this->config->paths['themes'].$this->config->site['theme'].'/';
+                $thumbnails[] = $pathPrefix.$themeUrl.'images/default_package_icon_'.$size.'.png';
             }
         }
+
         return $thumbnails;
     }
 
@@ -302,6 +316,7 @@ class Package
      * Returns a list of screenshots for the specified package.
      *
      * @param string $pathPrefix Prefix to put before file path
+     *
      * @return array List of screenshots
      */
     public function getSnapshots($pathPrefix = '')
@@ -310,17 +325,18 @@ class Package
         $i = 1;
         while (true) {
             try {
-                $this->extractIfMissing('screen_' . $i . '.png', $this->filepathNoExt . '_screen_' . $i . '.png');
-                $i++;
+                $this->extractIfMissing('screen_'.$i.'.png', $this->filepathNoExt.'_screen_'.$i.'.png');
+                ++$i;
             } catch (\Exception $e) {
                 break;
             }
         }
-        $snapshots = array();
+        $snapshots = [];
         // Add screenshots, if available
-        foreach (glob($this->filepathNoExt . '*_screen_*.png') as $snapshot) {
-            $snapshots[] = $pathPrefix . $snapshot;
+        foreach (glob($this->filepathNoExt.'*_screen_*.png') as $snapshot) {
+            $snapshots[] = $pathPrefix.$snapshot;
         }
+
         return $snapshots;
     }
 
@@ -328,32 +344,34 @@ class Package
      * Checks compatibility to the given $arch-itecture.
      *
      * @param string $arch Architecture to check against (or "noarch")
-     * @return bool TRUE if compatible, otherwise FALSE.
+     *
+     * @return bool TRUE if compatible, otherwise FALSE
      */
     public function isCompatibleToArch($arch)
     {
         // TODO: Check arch family, too?
-        return (in_array($arch, $this->metadata['arch']) || in_array('noarch', $this->metadata['arch']));
+        return in_array($arch, $this->metadata['arch']) || in_array('noarch', $this->metadata['arch']);
     }
 
     /**
      * Checks compatibility to the given firmware $version.
      *
-     * @param string $version Target firmware version.
-     * @return bool TRUE if compatible, otherwise FALSE.
+     * @param string $version target firmware version
+     *
+     * @return bool TRUE if compatible, otherwise FALSE
      */
     public function isCompatibleToFirmware($version)
     {
-        return version_compare($this->metadata['firmware'], $version, '<=');
+        return version_compare($this->metadata['firmware'], $version, '>=');
     }
 
     /**
      * Checks if this package is a beta version or not.
      *
-     * @return bool TRUE if this is a beta version, FALSE otherwise.
+     * @return bool TRUE if this is a beta version, FALSE otherwise
      */
     public function isBeta()
     {
-        return (isset($this->metadata['beta']) && $this->parseBool($this->metadata['beta']));
+        return isset($this->metadata['beta']) && $this->parseBool($this->metadata['beta']);
     }
 }
