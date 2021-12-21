@@ -28,7 +28,7 @@ RUN wget http://xdebug.org/files/xdebug-3.1.1.tgz \
     && sudo bash -c "echo -e '\nzend_extension = /usr/lib/php/20200930/xdebug.so\n[XDebug]\nxdebug.mode = debug\nxdebug.start_with_request = yes\nxdebug.log = /var/log/xdebug.log\nxdebug.client_host=localhost\nxdebug.client_port = 9003\nxdebug.idekey = VSCODE\nxdebug.remote_cookie_expire_time = 3600\n' >> /etc/php/8.0/cli/conf.d/20-xdebug.ini"
 
 # Install Krypton
-RUN sudo curl https://krypt.co/kr | sh
+RUN sudo curl https://krypt.co/kr | sh; exit 0
 
 # Install latest composer v2 release
 RUN curl -s https://getcomposer.org/installer | php \

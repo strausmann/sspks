@@ -10,11 +10,12 @@ COPY . /var/www/localhost/htdocs/
 RUN apk update && apk add --no-cache apache2 php7-apache2 php7-phar php7-ctype php7-json \
  && apk add --virtual=.build-dependencies curl openssl php7 php7-openssl git \
  && rm -f /var/www/localhost/htdocs/index.html \
- && curl -sSL https://getcomposer.org/download/1.6.5/composer.phar -o /usr/local/bin/composer \
+ && curl -sSL https://getcomposer.org/installer | php \
+ && sudo mv composer.phar /usr/local/bin/composer \
  && chmod +x /usr/local/bin/composer \
  && cd /var/www/localhost/htdocs \
- && composer install --no-dev \
-  ; rm -f /usr/local/bin/composer \
+ && composer install --no-dev --optimize-autoloader --no-interaction --no-scripts --no-progress --prefer-dist --no-ansi --no-cache \
+ && rm -f /usr/local/bin/composer \
  && apk del .build-dependencies \
  && rm -rf /var/cache/apk/* \
  && mkdir /run/apache2 \
