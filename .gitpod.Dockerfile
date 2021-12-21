@@ -30,7 +30,7 @@ RUN curl -s https://getcomposer.org/installer | php \
 USER gitpod
 
 # Install Changelogger
-RUN COMPOSER_ALLOW_SUPERUSER=1 composer global require churchtools/changelogger --ignore-platform-req=php
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer global require churchtools/changelogger; exit 0
 
 # Add composer bin folder to $PATH
 ENV PATH="$PATH:/home/gitpod/.config/composer/vendor/bin"
