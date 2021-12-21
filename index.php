@@ -15,5 +15,8 @@ $config = new Config(__DIR__, 'conf/sspks.yaml');
 $config->baseUrlRelative = substr($_SERVER['REQUEST_URI'], 0, strrpos($_SERVER['REQUEST_URI'], '/')) . '/';
 $config->baseUrl = 'http' . (array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS']?'s':'') . '://' . $_SERVER['HTTP_HOST'] . $config->baseUrlRelative;
 
+echo $config->baseUrl;
+exit;
+
 $handler = new Handler($config);
 $handler->handle();

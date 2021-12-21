@@ -4,9 +4,11 @@ image:
 ports:
   - port: 8000
     onOpen: open-browser
+  - port: 9000
+    onOpen: open-browser
 
 tasks:
-  - init: composer install --no-dev
+  - init: composer install -o
   - name: PHP BuiltIn Server
     command: php -S 0.0.0.0:8000 -t ./
 
