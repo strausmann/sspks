@@ -16,7 +16,7 @@ RUN wget http://xdebug.org/files/xdebug-3.1.1.tgz \
     && make \
     && sudo mkdir -p /usr/lib/php/20200930 \
     && sudo cp modules/xdebug.so /usr/lib/php/20200930 \
-    && sudo bash -c "echo -e '\nzend_extension = /usr/lib/php/20190902/xdebug.so\n[XDebug]\nxdebug.client_host = 0.0.0.0\nxdebug.client_port = 9003\nxdebug.log = /var/log/xdebug.log\nxdebug.mode = debug\nxdebug.start_with_request = yes\n' >> /etc/php/8.0/cli/conf.d/20-xdebug.ini"
+    && sudo bash -c "echo -e '\nzend_extension = /usr/lib/php/20200930/xdebug.so\n[XDebug]\nxdebug.client_host = 0.0.0.0\nxdebug.client_port = 9003\nxdebug.log = /var/log/xdebug.log\nxdebug.mode = debug\nxdebug.start_with_request = yes\n' >> /etc/php/8.0/cli/conf.d/20-xdebug.ini"
 
 # Install Krypton
 RUN sudo curl https://krypt.co/kr | sh
