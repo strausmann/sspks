@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * xdebug support für PHP 8 [@strausmann](https://github.com/strausmann)
 * Upgrade to xdebug 3.1.1
 * Update .dockerignore to cleanup the Docker Image
+* Dockerfile base image to alpine:3.15 (PHP 7.4)
+* Dockerfile Composer to v2
 
 ### Fixed
 
