@@ -27,7 +27,7 @@ RUN wget http://xdebug.org/files/xdebug-3.1.1.tgz \
     && sudo cp modules/xdebug.so /usr/lib/php/20200930
 
 # Copy xdebug config
-COPY --chmod=666 gitpod/.gp/xdebug.ini /etc/php/8.0/cli/conf.d/20-xdebug.ini
+COPY --chmod=666 .gp/xdebug.ini /tmp/
 
 # Install Krypton
 RUN sudo curl https://krypt.co/kr | sh
