@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+
+* GitPod Prebuilt [@strausmann](https://github.com/strausmann)
+
+### Changed
+
+* xdebug support für PHP 8 [@strausmann](https://github.com/strausmann)
+* Upgrade to xdebug 3.1.1
+* Update .dockerignore to cleanup the Docker Image
+
+### Fixed
+
+* Building GitPod Image failes, xdebug path incompatible with the new gitpod image based in PHP 8
+* xdebug not working [@strausmann](https://github.com/strausmann)
+
 ## [1.1.6] - 2021-07-19	
 ### Added
 

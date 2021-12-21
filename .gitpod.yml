@@ -4,8 +4,11 @@ image:
 ports:
   - port: 8000
     onOpen: open-browser
+  - port: 8888
+    onOpen: open-preview
+    visibility: public
   - port: 9003
-    onOpen: open-browser
+    onOpen: ignore
 
 tasks:
   - init: composer install -o
@@ -15,6 +18,9 @@ tasks:
 vscode:
   extensions:
     - felixfbecker.php-debug
+    - ms-azuretools.vscode-docker
+    - editorconfig.editorconfig
+    - josee9988.changelog-and-markdown-snippets
 
 github:
   prebuilds:

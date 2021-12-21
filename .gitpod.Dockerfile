@@ -2,10 +2,19 @@ FROM gitpod/workspace-full
 
 USER root
 
+# gitpod trick to bypass the docker caching mechanism for all lines below this one
+# just increment the value each time you want to bypass the cache system
+ENV INVALIDATE_CACHE=1
+
 # Update APT Database
 ### base ###
 RUN sudo apt-get update -q \
-    && sudo apt-get install -y php-dev ca-certificates 
+    && sudo apt-get install -y php-dev ca-certificates rsync grc shellcheck \
+    && sudo apt-get clean
+
+# Create log files and move required files to their proper locations
+RUN sudo touch /var/log/xdebug.log \
+    && sudo chmod 666 /var/log/xdebug.log
 
 # Install XDebug
 RUN wget http://xdebug.org/files/xdebug-3.1.1.tgz \
@@ -15,8 +24,10 @@ RUN wget http://xdebug.org/files/xdebug-3.1.1.tgz \
     && ./configure \
     && make \
     && sudo mkdir -p /usr/lib/php/20200930 \
-    && sudo cp modules/xdebug.so /usr/lib/php/20200930 \
-    && sudo bash -c "echo -e '\nzend_extension = /usr/lib/php/20190902/xdebug.so\n[XDebug]\nxdebug.client_host = 0.0.0.0\nxdebug.client_port = 9003\nxdebug.log = /var/log/xdebug.log\nxdebug.mode = debug\nxdebug.start_with_request = yes\n' >> /etc/php/8.0/cli/conf.d/20-xdebug.ini"
+    && sudo cp modules/xdebug.so /usr/lib/php/20200930
+
+# Copy xdebug config
+COPY --chmod=666 .gp/xdebug.ini /etc/php/8.0/cli/conf.d/20-xdebug.ini
 
 # Install Krypton
 RUN sudo curl https://krypt.co/kr | sh
@@ -33,4 +44,4 @@ USER gitpod
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer global require churchtools/changelogger; exit 0
 
 # Add composer bin folder to $PATH
-ENV PATH="$PATH:/home/gitpod/.config/composer/vendor/bin"
+ENV PATH="$PATH:/home/gitpod/.config/composer/vendor/bin:$GITPOD_REPO_ROOT/vendor/bin"

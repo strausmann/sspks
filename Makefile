@@ -18,17 +18,21 @@ sspks_noarch_${DATE}.spk: package.tgz INFO
 package.tgz: .htaccess
 	@rm -rf ./_syno_package/package/share/sspks/*
 	@rsync -av --delete ./* ./_syno_package/package/share/sspks \
-	       --exclude _syno_package \
-	       --exclude docker \
-	       --exclude hooks \
-				 --exclude Dockerfile \
-				 --exclude INSTALL.md \
-				 --exclude README.md \
-				 --exclude Makefile \
-				 --exclude VERSION \
-				 --exclude CHANGELOG \
-				 --exclude phpunit.xml.dist \
-				 --exclude tests
+	    	--exclude _syno_package \
+			--exclude .gp \
+			--exclude .vscode \
+			--exclude .gitpod.Dockerfile \
+			--exclude .gitpod.yml \
+	    	--exclude docker \
+	    	--exclude hooks \
+			--exclude Dockerfile \
+			--exclude INSTALL.md \
+			--exclude README.md \
+			--exclude Makefile \
+			--exclude VERSION \
+			--exclude CHANGELOG \
+			--exclude phpunit.xml.dist \
+			--exclude tests
 	@cd ./_syno_package/package && COPYFILE_DISABLE=1 tar cfvz ../package.tgz *
 
 .htaccess:
