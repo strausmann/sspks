@@ -6,7 +6,7 @@
                     </div>
                     <div class="spk-desc">
                         <span class="spk-title">{{ displayname }} v{{ version }}</span><br />
-                        <p class="dsm-version">Minimum DSM version: {{ firmware }}</p>
+                        <p class="dsm-version">Minimum DSM version: {{ firmware }}{{ os_min_ver }}</p>
                         <p>{{ description }}</p>
                         <p>
                             <a id="{{ package }}_show" href="#nogo" onclick="toggleClass('open', ['{{ package }}_detail']); toggleClass('hidden', ['{{ package }}_show', '{{ package }}_hide']); return false;">More...</a>

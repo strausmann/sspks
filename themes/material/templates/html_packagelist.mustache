@@ -18,7 +18,7 @@
             <img src="{{ thumbnail_url.0 }}" alt="{{ displayname }}" />{{# beta }}<ins></ins>{{/ beta }}
         </div>
         <div class="mdl-card__supporting-text spk-dsmversion">
-            Minimum DSM version: {{ firmware }}
+            Minimum DSM version: {{ firmware }}{{ os_min_ver }}
         </div>
         <div class="mdl-card__supporting-text">
             {{ description }}
@@ -30,7 +30,7 @@
                 <tr><td>Display Name</td><td>{{ displayname }}</td></tr>
                 <tr><td>Maintainer</td><td>{{ maintainer }}</td></tr>
                 <tr><td>Arch</td><td>{{# arch}}{{.}} {{/ arch}}</td></tr>
-                <tr><td>Firmware</td><td>{{ firmware }}</td></tr>
+                <tr><td>DSM version:</td><td>{{ firmware }}{{ os_min_ver }}</td></tr>
             </table>
         </div>
         <div class="mdl-layout-spacer"></div>

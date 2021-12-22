@@ -20,7 +20,7 @@ use \Symfony\Component\Yaml\Exception\ParseException;
  */
 class Config implements \Iterator
 {
-    private $iterPos;
+    private $iterPos = 0;
     private $basePath;
     private $cfgFile;
     private $config;

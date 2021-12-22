@@ -21,8 +21,9 @@ namespace SSpkS\Package;
  * @property array $thumbnail_url List of thumbnail URLs
  * @property array $snapshot List of screenshot files
  * @property array $snapshot_url List of screenshot URLs
- * @property bool $beta TRUE if this is a beta package.
- * @property string $firmware Minimum firmware needed on device.
+ * @property bool $beta TRUE if this is a beta package (Required: DSM 6.0 or above).
+ * @property string $firmware Minimum firmware needed on device (Note: Deprecated after 6.1-14715, use os_min_ver instead.). 
+ * @property string $os_min_ver Minimum OS version needed on device (follower from firmware).
  * @property string $install_dep_services Dependencies required by this package.
  * @property bool $silent_install Allow silent install
  * @property bool $silent_uninstall Allow silent uninstall
@@ -37,7 +38,7 @@ class Package
     private $config;
     private $filepath;
     private $filepathNoExt;
-    private $filename;
+    private $filename; # is declared but not used.
     private $filenameNoExt;
     private $metafile;
     private $wizfile;
@@ -345,14 +346,19 @@ class Package
     }
 
     /**
-     * Checks compatibility to the given firmware $version.
+     * Checks compatibility to the given firmware or os_min_ver $version.
      *
-     * @param string $version Target firmware version.
+     * @param string $version Target firmware or os_min_ver version.
      * @return bool TRUE if compatible, otherwise FALSE.
      */
     public function isCompatibleToFirmware($version)
     {
-        return version_compare($this->metadata['firmware'], $version, '<=');
+        if (isset($this->metadata['firmware']) and !(empty($this->metadata['firmware']))) {
+            return version_compare($this->metadata['firmware'], $version, '<=');
+        } else {
+            return version_compare($this->metadata['os_min_ver'], $version, '<=');
+        }
+        
     }
 
     /**
